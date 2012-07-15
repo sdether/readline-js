@@ -1,8 +1,8 @@
 /* lookup tables */
-readline_keycode_to_local_table = [ /* lowercase ASCII, with fallthrough */
+readline_keycode_to_local_table = [ /* lowercase ASCII, with fallthrough, -1 forces 0 */
 	/* 0x00 1    2    3    4    5    6    7    8    9    a    b    c    d    e    f */
 	   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-	   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
+	  -1,  -1,  -1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
 	   0,   0,   0,   0,   0,0x02,   0,0x06,   0,   0,   0,   0,   0,   0,0x04,   0,
 	   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
 
@@ -53,7 +53,7 @@ readline_local_to_uppercase_table = [ /* with fallthrough */
 	
 function readline_keycode_to_local(keycode) {
 	var v = readline_keycode_to_local_table[keycode];
-	return v ? v : keycode;
+	return v == -1 ? 0 : (v ? v : keycode);
 }
 function readline_local_to_control(loc) {
 	return readline_local_to_control_table[loc];
