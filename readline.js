@@ -73,7 +73,8 @@ $.fn.readline = function(arg1, arg2) {
 	var line = '';
 	var kill = '';
 	var cursor = 0;
-	var box = $(this[0]);
+	var entry_box = $(this[0]);
+	var entry_cur;
 	var keys = Array(256);
 	var fn = Array(128);
 
@@ -132,13 +133,13 @@ $.fn.readline = function(arg1, arg2) {
 
 		before = readline_htmlify(before);
 		after = readline_htmlify(after);
-		cur = $('<span/>').html(cur).addClass('cursor');
+		entry_cur = $('<span/>').html(cur).addClass('cursor');
 
-		if (keys[0x10]) cur.addClass('shift');
-		if (keys[0x11]) cur.addClass('ctrl');
+		if (keys[0x10]) entry_cur.addClass('shift');
+		if (keys[0x11]) entry_cur.addClass('ctrl');
 
-		box.empty();
-		box.append(p, before, cur, after);
+		entry_box.empty();
+		entry_box.append(p, before, entry_cur, after);
 	};
 
 	$('body').keydown(function(e) {
