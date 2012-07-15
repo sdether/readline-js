@@ -27,7 +27,8 @@ character under the cursor will be contained within a `<span>` with the
 class `cursor`. The cursor `<span>` will also have any of the `ctrl` or
 `shift` classes, depending on whether the corresponding modifiers are
 being held down. This can be used to alter the appearance of the cursor
-based on the status of the modifier keys.
+based on the status of the modifier keys. When blinking, the cursor's
+class alternates between `cursor` and `cursor-blink`.
 
 # Limitations and Quirks #
 * Currently, only one element on the page may be used for text entry.

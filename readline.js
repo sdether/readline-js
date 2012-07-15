@@ -77,6 +77,8 @@ $.fn.readline = function(arg1, arg2) {
 	var entry_cur;
 	var keys = Array(256);
 	var fn = Array(128);
+	var blinker;
+	var blink_time = 400;
 
 	if (arg2 == undefined) {
 		cb = arg1;
@@ -119,6 +121,20 @@ $.fn.readline = function(arg1, arg2) {
 	fn[0x15] = function(k) { kill = line.substring(0, cursor); splice('', 0, cursor); }; /* ^U */
 	fn[0x19] = function(k) { splice(kill, cursor, cursor); cursor += kill.length; }; /* ^Y */
 
+	blink_up = function() {
+		entry_cur.addClass('cursor');
+		entry_cur.removeClass('cursor-blink');
+		window.clearTimeout(blinker);
+		blinker = window.setTimeout(blink_down, blink_time);
+	};
+
+	blink_down = function() {
+		entry_cur.removeClass('cursor');
+		entry_cur.addClass('cursor-blink');
+		window.clearTimeout(blinker);
+		blinker = window.setTimeout(blink_up, blink_time);
+	};
+
 	box_update = function() {
 		var before = line;
 		var cur = '&nbsp';
@@ -133,7 +149,8 @@ $.fn.readline = function(arg1, arg2) {
 
 		before = readline_htmlify(before);
 		after = readline_htmlify(after);
-		entry_cur = $('<span/>').html(cur).addClass('cursor');
+		entry_cur = $('<span/>').html(cur);
+		blink_up();
 
 		if (keys[0x10]) entry_cur.addClass('shift');
 		if (keys[0x11]) entry_cur.addClass('ctrl');
