@@ -77,6 +77,8 @@ $.fn.readline = function(arg1, arg2) {
 	var entry_cur;
 	var keys = Array(256);
 	var fn = Array(128);
+	var history = [''];
+	var history_pos = 0;
 	var blinker;
 	var blink_time = 400;
 
@@ -99,8 +101,24 @@ $.fn.readline = function(arg1, arg2) {
 	};
 
 	fn_enter = function(k) {
+		history[history.length-1] = line;
+		history_pos = history.length;
+		history.push('');
 		cb(line);
 		line = '';
+	};
+
+	fn_history_move = function(delta) {
+		return function(k) {
+			history[history_pos] = line;
+			history_pos += delta;
+			if (history_pos < 0)
+				history_pos = 0;
+			if (history_pos >= history.length)
+				history_pos = history.length - 1;
+			line = history[history_pos];
+			cursor = line.length;
+		};
 	};
 
 	for (i=0x00; i<0x80; i++)
@@ -118,6 +136,8 @@ $.fn.readline = function(arg1, arg2) {
 	fn[0x0a] = fn_enter; /* ^J */
 	fn[0x0b] = function(k) { kill = line.substring(cursor); splice('', cursor, line.length); }; /* ^K */
 	fn[0x0d] = fn_enter; /* ^M, or enter */
+	fn[0x0e] = fn_history_move(1); /* ^N */
+	fn[0x10] = fn_history_move(-1); /* ^P */
 	fn[0x15] = function(k) { kill = line.substring(0, cursor); splice('', 0, cursor); }; /* ^U */
 	fn[0x19] = function(k) { splice(kill, cursor, cursor); cursor += kill.length; }; /* ^Y */
 
